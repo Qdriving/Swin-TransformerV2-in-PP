@@ -157,7 +157,8 @@ class WindowAttention(nn.Layer):
         ########## update V2 #############
         if 1:
             mlp_dim = 2
-            mlp_hidden_dim = int(mlp_dim * 4)
+            mlp_bias_ratio = np.floor(np.sqrt(window_size[0])) + 1
+            mlp_hidden_dim = int(mlp_dim * mlp_bias_ratio)
             self.mlp_bias = Mlp(in_features=mlp_dim,
                         hidden_features=mlp_hidden_dim,
                         out_features = num_heads,
