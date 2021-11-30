@@ -53,8 +53,8 @@ DataLoader:
   Train:
     dataset:
       name: ImageNetDataset
-      image_root: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/
-      cls_label_path: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/train_list.txt
+      image_root: ./ILSVRC2012mini/
+      cls_label_path: ./ILSVRC2012mini/train_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
@@ -103,8 +103,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/
-      cls_label_path: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/val_list.txt
+      image_root: ./ILSVRC2012mini/
+      cls_label_path: ./ILSVRC2012mini/val_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
