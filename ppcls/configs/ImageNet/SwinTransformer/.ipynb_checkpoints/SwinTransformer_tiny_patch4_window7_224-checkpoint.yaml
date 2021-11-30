@@ -1,8 +1,8 @@
 # global configs   ./output/SwinTransformer_tiny_patch4_window7_224/best_model
 Global:
-  checkpoints: ./output/SwinTransformer_tiny_patch4_window7_224/latest
-  pretrained_model: ./output/SwinTransformer_tiny_patch4_window7_224/latest
-  output_dir: ./output/
+  checkpoints: null
+  pretrained_model: null
+  output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
   eval_during_train: True
@@ -53,8 +53,8 @@ DataLoader:
   Train:
     dataset:
       name: ImageNetDataset
-      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
-      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/train_list.txt
+      image_root: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/
+      cls_label_path: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/train_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
@@ -103,8 +103,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
-      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/val_list.txt
+      image_root: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/
+      cls_label_path: /root/paddlejob/workspace/train_data/datasets/data89857/ILSVRC2012mini/val_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
