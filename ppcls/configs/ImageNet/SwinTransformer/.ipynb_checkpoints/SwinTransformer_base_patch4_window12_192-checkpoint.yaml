@@ -1,24 +1,24 @@
-# global configs   ./output/SwinTransformer_tiny_patch4_window7_224/best_model
+# global configs   ./output/SwinTransformer_base_patch4_window12_384/latest
 Global:
   checkpoints: null
   pretrained_model: null
-  output_dir: /root/paddlejob/workspace/output/
+  output_dir: ./output/
   device: gpu
-  save_interval: 1
+  save_interval: 4
   eval_during_train: True
   eval_interval: 1
-  epochs: 150
-  print_batch_step: 10
+  epochs: 1200
+  print_batch_step: 40
   use_visualdl: False
   # used for static mode and model export
-  image_shape: [3, 224, 224]
+  image_shape: [3, 192, 192]
   save_inference_dir: ./inference
   # training model under @to_static
   to_static: False
 
 # model architecture
 Arch:
-  name: SwinTransformer_tiny_patch4_window7_224
+  name: SwinTransformer_base_patch4_window12_384
   class_num: 1000
  
 # loss function config for traing/eval process
@@ -42,9 +42,9 @@ Optimizer:
   one_dim_param_no_weight_decay: True
   lr:
     name: Cosine
-    learning_rate: 1e-3
+    learning_rate: 1.25e-4
     eta_min: 1e-5
-    warmup_epoch: 5
+    warmup_epoch: 20
     warmup_start_lr: 1e-6
 
 
@@ -53,14 +53,14 @@ DataLoader:
   Train:
     dataset:
       name: ImageNetDataset
-      image_root: /root/paddlejob/workspace/code/ILSVRC2012mini/
-      cls_label_path: /root/paddlejob/workspace/code/ILSVRC2012mini/train_list.txt
+      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
+      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/train_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
             channel_first: False
         - RandCropImage:
-            size: 224
+            size: 192
             interpolation: bicubic
             backend: pil
         - RandFlipImage:
@@ -68,7 +68,7 @@ DataLoader:
         - TimmAutoAugment:
             config_str: rand-m9-mstd0.5-inc1
             interpolation: bicubic
-            img_size: 224
+            img_size: 192 
         - NormalizeImage:
             scale: 1.0/255.0
             mean: [0.485, 0.456, 0.406]
@@ -93,7 +93,7 @@ DataLoader:
 
     sampler:
       name: DistributedBatchSampler
-      batch_size: 64
+      batch_size: 32
       drop_last: False
       shuffle: True
     loader:
@@ -103,18 +103,18 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: /root/paddlejob/workspace/code/ILSVRC2012mini/
-      cls_label_path: /root/paddlejob/workspace/code/ILSVRC2012mini/val_list.txt
+      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
+      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/val_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
             channel_first: False
         - ResizeImage:
-            resize_short: 256
+            resize_short: 438
             interpolation: bicubic
             backend: pil
         - CropImage:
-            size: 224
+            size: 192
         - NormalizeImage:
             scale: 1.0/255.0
             mean: [0.485, 0.456, 0.406]
@@ -122,7 +122,7 @@ DataLoader:
             order: ''
     sampler:
       name: DistributedBatchSampler
-      batch_size: 64
+      batch_size: 32
       drop_last: False
       shuffle: False
     loader:
@@ -137,11 +137,11 @@ Infer:
         to_rgb: True
         channel_first: False
     - ResizeImage:
-        resize_short: 256
+        resize_short: 438
         interpolation: bicubic
         backend: pil
     - CropImage:
-        size: 224
+        size: 192
     - NormalizeImage:
         scale: 1.0/255.0
         mean: [0.485, 0.456, 0.406]
