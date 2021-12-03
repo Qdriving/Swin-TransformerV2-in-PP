@@ -7,8 +7,8 @@ Global:
   save_interval: 4
   eval_during_train: True
   eval_interval: 1
-  epochs: 1200
-  print_batch_step: 40
+  epochs: 300
+  print_batch_step: 10
   use_visualdl: False
   # used for static mode and model export
   image_shape: [3, 192, 192]
@@ -44,7 +44,7 @@ Optimizer:
     name: Cosine
     learning_rate: 5e-4
     eta_min: 1e-5
-    warmup_epoch: 20
+    warmup_epoch: 10
     warmup_start_lr: 1e-6
 
 
