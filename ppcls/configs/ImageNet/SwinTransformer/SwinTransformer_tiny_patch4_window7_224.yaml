@@ -1,7 +1,7 @@
 # global configs   ./output/SwinTransformer_tiny_patch4_window7_224/best_model
 Global:
-  checkpoints: null
-  pretrained_model: null
+  checkpoints: /root/paddlejob/workspace/code/latest
+  pretrained_model: /root/paddlejob/workspace/code/latest
   output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
