@@ -42,7 +42,7 @@ Optimizer:
   one_dim_param_no_weight_decay: True
   lr:
     name: Cosine
-    learning_rate: 1.25e-4
+    learning_rate: 5e-4
     eta_min: 1e-5
     warmup_epoch: 20
     warmup_start_lr: 1e-6
@@ -53,8 +53,8 @@ DataLoader:
   Train:
     dataset:
       name: ImageNetDataset
-      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
-      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/train_list.txt
+      image_root: /root/paddlejob/workspace/code/ILSVRC2012_w/
+      cls_label_path: /root/paddlejob/workspace/code/ILSVRC2012_w/train_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
@@ -103,8 +103,8 @@ DataLoader:
   Eval:
     dataset: 
       name: ImageNetDataset
-      image_root: /home/aistudio/data/data89857/ILSVRC2012mini/
-      cls_label_path: /home/aistudio/data/data89857/ILSVRC2012mini/val_list.txt
+      image_root: /root/paddlejob/workspace/code/ILSVRC2012_w/
+      cls_label_path: /root/paddlejob/workspace/code/ILSVRC2012_w/val_list.txt
       transform_ops:
         - DecodeImage:
             to_rgb: True
