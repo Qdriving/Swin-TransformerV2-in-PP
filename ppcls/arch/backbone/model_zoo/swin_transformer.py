@@ -176,14 +176,14 @@ class WindowAttention(nn.Layer):
                     act_layer=nn.ReLU,
                     drop=0.1)
 
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         if qkv_bias:
             qkv_bias = bias_preattr
         self.qkv = nn.Linear(dim, dim * 3, weight_attr=weight_preattr, bias_attr=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.proj = nn.Linear(dim, dim, weight_preattr, bias_preattr)
         self.proj_drop = nn.Dropout(proj_drop)
 
@@ -214,15 +214,9 @@ class WindowAttention(nn.Layer):
 
         ################## V2 update ##############
         if 1:
-            q0 = q * self.scale
-            k0 = paddle.transpose(k, perm=[0, 1, 3, 2])
-            attn0 = paddle.mm(q0, k0)
-
             q = paddle.transpose(q, perm=[0, 1, 3, 2]).unsqueeze(axis=3)
             k = paddle.transpose(k, perm=[0, 1, 3, 2]).unsqueeze(axis=4)
             attn = self.Cosqk(q, k) * self.qk_scale 
-
-            dt_attn = paddle.mean(paddle.abs(attn -attn0))
 
         else:
             q = q * self.scale
@@ -234,12 +228,6 @@ class WindowAttention(nn.Layer):
             index = paddle.sign(index) * paddle.log(1 + paddle.abs(index))
             index = paddle.reshape(index, shape=[-1, 2])
             relative_position_bias = self.mlp_bias(index)
-
-            index = self.relative_position_index.reshape([-1])
-            relative_position_bias0 = paddle.index_select(
-                self.relative_position_bias_table, index)
-
-            dt_bias = paddle.mean(paddle.abs(relative_position_bias0 - relative_position_bias))
 
         relative_position_bias = relative_position_bias.reshape([
             self.window_size[0] * self.window_size[1],
@@ -265,7 +253,7 @@ class WindowAttention(nn.Layer):
         x = paddle.mm(attn, v).transpose([0, 2, 1, 3]).reshape([B_, N, C])
         x = self.proj(x)
         x = self.proj_drop(x)
-        return x, dt_attn, dt_bias
+        return x
 
     def extra_repr(self):
         return "dim={}, window_size={}, num_heads={}".format(
@@ -331,8 +319,8 @@ class SwinTransformerBlock(nn.Layer):
             self.window_size = min(self.input_resolution)
         assert 0 <= self.shift_size < self.window_size, "shift_size must in 0-window_size"
         
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.norm1 = norm_layer(dim)
         self.attn = WindowAttention(
             dim,
@@ -406,7 +394,7 @@ class SwinTransformerBlock(nn.Layer):
              C])  # nW*B, window_size*window_size, C
 
         # W-MSA/SW-MSA
-        attn_windows, dlt_attn, dlt_bias = self.attn(
+        attn_windows = self.attn(
             x_windows, mask=self.attn_mask)  # nW*B, window_size*window_size, C
         
         attn_windows = self.norm1(attn_windows)
@@ -431,7 +419,7 @@ class SwinTransformerBlock(nn.Layer):
         x = shortcut + self.drop_path(x)
         x = x + self.drop_path(self.norm2(self.mlp(x)))
 
-        return x, paddle.mean(dlt_attn), paddle.mean(dlt_bias)
+        return x
 
     def extra_repr(self):
         return "dim={}, input_resolution={}, num_heads={}, window_size={}, shift_size={}, mlp_ratio={}".format(
@@ -466,10 +454,10 @@ class PatchMerging(nn.Layer):
         super().__init__()
         self.input_resolution = input_resolution
         self.dim = dim
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.reduction = nn.Linear(4 * dim, 2 * dim, weight_attr=weight_preattr, bias_attr=False)
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.norm = norm_layer(4 * dim, weight_attr=weight_preattr, bias_attr=bias_preattr)
 
     def forward(self, x):
@@ -575,21 +563,13 @@ class BasicLayer(nn.Layer):
             self.downsample = None
 
     def forward(self, x):
-        i = 0
-        for blk in self.blocks:
-            x, dlt_attn, dlt_bias = blk(x)
-            if i == 0:
-                t_attn = dlt_attn
-                t_bias = dlt_bias
-            else:
-                t_attn += dlt_attn
-                t_bias += dlt_bias
 
-            i += 1
+        for blk in self.blocks:
+            x = blk(x)
 
         if self.downsample is not None:
             x = self.downsample(x)
-        return x, paddle.mean(t_attn), paddle.mean(t_bias)
+        return x
 
     def extra_repr(self):
         return "dim={}, input_resolution={}, depth={}".format(
@@ -635,13 +615,13 @@ class PatchEmbed(nn.Layer):
         self.in_chans = in_chans
         self.embed_dim = embed_dim
 
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.proj = nn.Conv2D(
             in_chans, embed_dim, kernel_size=patch_size, stride=patch_size, weight_attr=weight_preattr, bias_attr=bias_preattr)
         if norm_layer is not None:
-            weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-            bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+            weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+            bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
             self.norm = norm_layer(embed_dim, weight_attr=weight_preattr, bias_attr=bias_preattr)
         else:
             self.norm = None
@@ -768,12 +748,12 @@ class SwinTransformer(nn.Layer):
                 use_checkpoint=use_checkpoint)
             self.layers.append(layer)
         
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.norm = norm_layer(self.num_features, weight_attr=weight_preattr, bias_attr=bias_preattr)
         self.avgpool = nn.AdaptiveAvgPool1D(1)
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=True)
         self.head = nn.Linear(
             self.num_features,
             num_classes,
@@ -797,28 +777,19 @@ class SwinTransformer(nn.Layer):
             x = x + self.absolute_pos_embed
         x = self.pos_drop(x)
         
-        i = 0
         for layer in self.layers:
-            x, t_attn, t_bias = layer(x)
-            if i == 0:
-                tot_attn = t_attn
-                tot_bias = t_bias
-            else:
-                tot_attn += t_attn
-                tot_bias += t_bias
-
-            i += 1
+            x = layer(x)
 
         x = self.norm(x)  # B L C
         
         x = self.avgpool(x.transpose([0, 2, 1]))  # B C 1
         x = paddle.flatten(x, 1)
-        return x, (paddle.mean(tot_attn)+paddle.mean(tot_bias))/2.0
+        return x
 
     def forward(self, x):
-        x, y = self.forward_features(x)
+        x = self.forward_features(x)
         x = self.head(x)
-        return x, y
+        return x
 
     def flops(self):
         flops = 0
