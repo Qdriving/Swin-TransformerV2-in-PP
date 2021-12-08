@@ -5,7 +5,7 @@ Global:
   output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
-  eval_during_train: True
+  eval_during_train: False
   eval_interval: 1
   epochs: 30
   print_batch_step: 10
