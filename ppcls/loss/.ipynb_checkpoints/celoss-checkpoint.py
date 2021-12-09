@@ -44,8 +44,6 @@ class CELoss(nn.Layer):
     def forward(self, x, label):
         if isinstance(x, dict):
             x = x["logits"]
-        y = x
-        x = x[0]
         if self.epsilon is not None:
             class_num = x.shape[-1]
             label = self._labelsmoothing(label, class_num)
@@ -59,7 +57,7 @@ class CELoss(nn.Layer):
                 soft_label = False
             loss = F.cross_entropy(x, label=label, soft_label=soft_label)
         loss = loss.mean() 
-        return {"CELoss": loss, "ParamsLoss": y[1]}
+        return {"CELoss": loss}
 
 
 class MixCELoss(object):
