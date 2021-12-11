@@ -752,12 +752,12 @@ class SwinTransformer(nn.Layer):
                 use_checkpoint=use_checkpoint)
             self.layers.append(layer)
         
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.norm = norm_layer(self.num_features, weight_attr=weight_preattr, bias_attr=bias_preattr)
         self.avgpool = nn.AdaptiveAvgPool1D(1)
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.head = nn.Linear(
             self.num_features,
             num_classes,
