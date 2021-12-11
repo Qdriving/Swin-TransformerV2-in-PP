@@ -715,7 +715,7 @@ class SwinTransformer(nn.Layer):
         num_patches = self.patch_embed.num_patches
         patches_resolution = self.patch_embed.patches_resolution
         self.patches_resolution = patches_resolution
-        self.pattch_embed.stop_gradient = True
+        self.patch_embed.stop_gradient = True
 
         # absolute position embedding
         if self.ape:
