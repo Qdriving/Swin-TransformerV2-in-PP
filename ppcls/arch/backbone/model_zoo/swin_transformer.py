@@ -715,6 +715,7 @@ class SwinTransformer(nn.Layer):
         num_patches = self.patch_embed.num_patches
         patches_resolution = self.patch_embed.patches_resolution
         self.patches_resolution = patches_resolution
+        self.pattch_embed.stop_gradient = True
 
         # absolute position embedding
         if self.ape:
@@ -751,12 +752,12 @@ class SwinTransformer(nn.Layer):
                 use_checkpoint=use_checkpoint)
             self.layers.append(layer)
         
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
         self.norm = norm_layer(self.num_features, weight_attr=weight_preattr, bias_attr=bias_preattr)
         self.avgpool = nn.AdaptiveAvgPool1D(1)
-        weight_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
-        bias_preattr = paddle.ParamAttr(learning_rate=0.01, trainable=False)
+        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
         self.head = nn.Linear(
             self.num_features,
             num_classes,
