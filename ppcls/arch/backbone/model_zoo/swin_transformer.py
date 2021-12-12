@@ -176,14 +176,14 @@ class WindowAttention(nn.Layer):
                     act_layer=nn.ReLU,
                     drop=0.1)
 
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         if qkv_bias:
             qkv_bias = bias_preattr
         self.qkv = nn.Linear(dim, dim * 3, weight_attr=weight_preattr, bias_attr=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.proj = nn.Linear(dim, dim, weight_preattr, bias_preattr)
         self.proj_drop = nn.Dropout(proj_drop)
 
@@ -319,8 +319,8 @@ class SwinTransformerBlock(nn.Layer):
             self.window_size = min(self.input_resolution)
         assert 0 <= self.shift_size < self.window_size, "shift_size must in 0-window_size"
         
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.norm111 = norm_layer(dim) #, weight_attr=weight_preattr, bias_attr=bias_preattr)
         self.attn = WindowAttention(
             dim,
@@ -332,11 +332,11 @@ class SwinTransformerBlock(nn.Layer):
             proj_drop=drop)
 
         self.drop_path = DropPath(drop_path) if drop_path > 0. else Identity()
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.norm222 = norm_layer(dim) #, weight_attr=weight_preattr, bias_attr=bias_preattr)
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         mlp_hidden_dim = int(dim * mlp_ratio)
         self.mlp = Mlp(in_features=dim,
                        hidden_features=mlp_hidden_dim,
@@ -458,10 +458,10 @@ class PatchMerging(nn.Layer):
         super().__init__()
         self.input_resolution = input_resolution
         self.dim = dim
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
+        bias_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.reduction = nn.Linear(4 * dim, 2 * dim, weight_attr=weight_preattr, bias_attr=False)
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=0.1, trainable=True)
         self.norm = norm_layer(4 * dim, weight_attr=weight_preattr, bias_attr=bias_preattr)
 
     def forward(self, x):
