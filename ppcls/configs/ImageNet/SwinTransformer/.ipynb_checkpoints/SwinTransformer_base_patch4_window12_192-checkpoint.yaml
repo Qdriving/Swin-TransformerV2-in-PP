@@ -1,7 +1,7 @@
 # global configs   ./output/SwinTransformer_base_patch4_window12_384/latest
 Global:
-  checkpoints: /root/paddlejob/workspace/code/SwinTransformer_base_patch4_window12_384/latest
-  pretrained_model: null
+  checkpoints: null
+  pretrained_model: /root/paddlejob/workspace/code/SwinTransformer_base_patch4_window12_384/latest
   output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
@@ -42,7 +42,7 @@ Optimizer:
   one_dim_param_no_weight_decay: True
   lr:
     name: Cosine
-    learning_rate: 2.5e-4
+    learning_rate: 2.5e-5
     eta_min: 1e-5
     warmup_epoch: 20
     warmup_start_lr: 1e-6
