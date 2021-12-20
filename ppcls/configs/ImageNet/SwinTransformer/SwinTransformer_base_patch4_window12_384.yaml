@@ -2,7 +2,7 @@
 Global:
   checkpoints: null
   pretrained_model: /root/paddlejob/workspace/code/SwinTransformer_base_patch4_window12_384/latest
-  output_dir: ./output/
+  output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
   eval_during_train: True
@@ -44,7 +44,7 @@ Optimizer:
     name: Cosine
     learning_rate: 1.5e-5
     eta_min: 1e-5
-    warmup_epoch: 20
+    warmup_epoch: 2
     warmup_start_lr: 1e-6
 
 
