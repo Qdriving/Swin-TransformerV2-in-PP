@@ -42,7 +42,7 @@ Optimizer:
   one_dim_param_no_weight_decay: True
   lr:
     name: Cosine
-    learning_rate: 1e-5
+    learning_rate: 5e-6
     eta_min: 1e-5
     warmup_epoch: 2
     warmup_start_lr: 1e-6
@@ -93,7 +93,7 @@ DataLoader:
 
     sampler:
       name: DistributedBatchSampler
-      batch_size: 4
+      batch_size: 6
       drop_last: False
       shuffle: True
     loader:
@@ -122,7 +122,7 @@ DataLoader:
             order: ''
     sampler:
       name: DistributedBatchSampler
-      batch_size: 4
+      batch_size: 6
       drop_last: False
       shuffle: False
     loader:
