@@ -618,13 +618,13 @@ class PatchEmbed(nn.Layer):
         self.in_chans = in_chans
         self.embed_dim = embed_dim
 
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
+        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
         self.proj = nn.Conv2D(
             in_chans, embed_dim, kernel_size=patch_size, stride=patch_size, weight_attr=weight_preattr, bias_attr=bias_preattr)
         if norm_layer is not None:
-            weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-            bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+            weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
+            bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
             self.norm = norm_layer(embed_dim, weight_attr=weight_preattr, bias_attr=bias_preattr)
         else:
             self.norm = None
@@ -752,12 +752,12 @@ class SwinTransformer(nn.Layer):
                 use_checkpoint=use_checkpoint)
             self.layers.append(layer)
         
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
+        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
         self.norm = norm_layer(self.num_features, weight_attr=weight_preattr, bias_attr=bias_preattr)
         self.avgpool = nn.AdaptiveAvgPool1D(1)
-        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
-        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=True)
+        weight_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
+        bias_preattr = paddle.ParamAttr(learning_rate=1.0, trainable=False)
         self.head = nn.Linear(
             self.num_features,
             num_classes,
@@ -876,7 +876,7 @@ def SwinTransformer_base_patch4_window12_384(pretrained=False,
                                              use_ssld=False,
                                              **kwargs):
     model = SwinTransformer(
-        img_size=384,
+        img_size=96,
         embed_dim=128,
         depths=[2, 2, 18, 2],
         num_heads=[4, 8, 16, 32],
