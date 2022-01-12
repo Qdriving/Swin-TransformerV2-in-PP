@@ -45,7 +45,7 @@ Optimizer:
     learning_rate: 2.5e-6
     eta_min: 1e-5
     warmup_epoch: 1
-    warmup_start_lr: 1e-6
+    warmup_start_lr: 1.5e-6
 
 
 # data loader for train and eval
