@@ -872,6 +872,25 @@ def SwinTransformer_base_patch4_window7_224(pretrained=False,
     return model
 
 
+def SwinTransformer_base_patch4_window12_192(pretrained=False,
+                                             use_ssld=False,
+                                             **kwargs):
+    model = SwinTransformer(
+        img_size=192,
+        embed_dim=128,
+        depths=[2, 2, 18, 2],
+        num_heads=[4, 8, 16, 32],
+        window_size=12,
+        drop_path_rate=0.5,  # NOTE: do not appear in offical code
+        **kwargs)
+    _load_pretrained(
+        pretrained,
+        model,
+        MODEL_URLS["SwinTransformer_base_patch4_window12_192"],
+        use_ssld=use_ssld)
+    return model
+
+
 def SwinTransformer_base_patch4_window12_384(pretrained=False,
                                              use_ssld=False,
                                              **kwargs):

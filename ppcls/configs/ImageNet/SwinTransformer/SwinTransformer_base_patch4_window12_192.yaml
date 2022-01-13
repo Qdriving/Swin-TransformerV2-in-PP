@@ -18,7 +18,7 @@ Global:
 
 # model architecture
 Arch:
-  name: SwinTransformer_base_patch4_window12_384
+  name: SwinTransformer_base_patch4_window12_192
   class_num: 1000
  
 # loss function config for traing/eval process
@@ -42,10 +42,10 @@ Optimizer:
   one_dim_param_no_weight_decay: True
   lr:
     name: Cosine
-    learning_rate: 1.5e-5
+    learning_rate: 1.5e-6
     eta_min: 1e-5
     warmup_epoch: 1
-    warmup_start_lr: 5e-6
+    warmup_start_lr: 5e-7
 
 
 # data loader for train and eval
