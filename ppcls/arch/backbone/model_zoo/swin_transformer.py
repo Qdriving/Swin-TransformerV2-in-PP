@@ -886,7 +886,7 @@ def SwinTransformer_base_patch4_window12_192(pretrained=False,
     _load_pretrained(
         pretrained,
         model,
-        MODEL_URLS["SwinTransformer_base_patch4_window12_192"],
+        MODEL_URLS["SwinTransformer_base_patch4_window12_384"],
         use_ssld=use_ssld)
     return model
 
