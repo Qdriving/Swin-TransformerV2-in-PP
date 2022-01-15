@@ -1,7 +1,7 @@
 # global configs   ./output/SwinTransformer_base_patch4_window12_384/latest
 Global:
-  checkpoints: /root/paddlejob/workspace/code/SwinTransformer_base_patch4_window12_192/latest
-  pretrained_model: null
+  checkpoints: null
+  pretrained_model: /root/paddlejob/workspace/code/SwinTransformer_base_patch4_window12_384/latest
   output_dir: /root/paddlejob/workspace/output/
   device: gpu
   save_interval: 1
