@@ -1,8 +1,8 @@
-# Swin Transformer V2: Scaling Up Capacity and Resolution
+# Swin Transformer V2: Scaling Up Capacity and Resolution in Paddle
 
 #### 介绍
 
-本文基于飞桨PaddleClas修改Swin Transformer按照Swin Transformer V2的内容进行修改，修改文件结构目录如下：
+本文基于飞桨PaddleClas/Swin Transformer代码按照Swin Transformer V2的内容进行修改，修改文件结构目录如下：
 - ---ppcls
    - ---arch
      - ---backbone
@@ -16,8 +16,11 @@
             - ---SwinTransformer_base_patch4_window12_192.yaml         #####增加的预训练192x92配置文件
             - ---SwinTransformer_base_patch4_window12_384.yaml         #####增加的预训练384x384配置文件
 
-#### 软件架构
-软件架构说明
+#### Swin_Transformer.py 主要修改内容
+1. 将layer_norm1放到attention后面，将layer_norm2放到MLP后面；
+  
+2. 将attention中q,k的计算更新为Cosine方式并除以(乘上)可学习的系数;  
+3. 将Attention中相对位置的Bij计算方式修改为对相对位置进行log—CPB后放入的MLP网络
 
 
 #### 安装教程
