@@ -33,11 +33,12 @@
    - relative_position_bias = self.mlp_bias(index)
 
 
-#### 安装教程
+#### 训练过程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  根据PaddleClas介绍内容，下载SwinT B V1的预训练权重；使用AI Studio上面压缩过的数据集Light_ILSVRC2012在四卡脚本任务下训练；
+2.  冻结PatchEmbed层，使用配置文件SwinTransformer_base_patch4_window12_96.yaml进行96x96图片size进行预训练，训练20 epochs后验证集精度在42%左右；
+3.  基于96x96的训练结果，预训练192x192图片size，训练10 epochs后验证集精度在72%左右；
+4.  基于192x192训练结果，预训练384x384图片size，训练5 epochs后验证集精度在82%左右，loss在2.64左右；经过多次调整learning_rate最终验证精度在82.7%一直无法再提高。
 
 #### 使用说明
 
