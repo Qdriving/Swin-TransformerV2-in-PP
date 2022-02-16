@@ -18,19 +18,19 @@
 
 #### 代码升级内容（Swin_Transformer.py）
 1. 将layer_norm1放到attention后面，将layer_norm2放到MLP后面；
-   在class SwinTransformerBlock里面重新定义self.norm111和self.norm222; 如果norm1和norm2的名称不变的话使用SwinTransformer V1预训练权重会让norm收敛很慢；
-   在forward函数里面将self.norm111放到self.attn后面，将self.norm222放到self.mlp执行后。
+  - 在class SwinTransformerBlock里面重新定义self.norm111和self.norm222; 如果norm1和norm2的名称不变的话使用SwinTransformer V1预训练权重会让norm收敛很慢；
+  - 在forward函数里面将self.norm111放到self.attn后面，将self.norm222放到self.mlp执行后。
    
 2. 将attention中q,k的计算更新为Cosine方式并除以可学习的系数;  
-   修改class WindowAttention，增加self.Cosqk和self.qk_scale计算attn： attn = self.Cosqk(q, k) * self.qk_scale
+  - 修改class WindowAttention，增加self.Cosqk和self.qk_scale计算attn： attn = self.Cosqk(q, k) * self.qk_scale
    
 3. 将Attention中相对位置的Bij计算方式修改为对相对位置进行log—CPB后放入的MLP网络
-   修改class WindowAttention，通过log-CPB计算Bij相对位置；
-   增加self.mlp_bias计算相对位置间的bias。
-   index = self.relative_position_index1.reshape([-1]).astype('float32')
-   index = paddle.sign(index) * paddle.log(1 + paddle.abs(index))
-   index = paddle.reshape(index, shape=[-1, 2])
-   relative_position_bias = self.mlp_bias(index)
+  - 修改class WindowAttention，通过log-CPB计算Bij相对位置；
+  - 增加self.mlp_bias计算相对位置间的bias。
+  - index = self.relative_position_index1.reshape([-1]).astype('float32')
+  - index = paddle.sign(index) * paddle.log(1 + paddle.abs(index))
+  - index = paddle.reshape(index, shape=[-1, 2])
+  - relative_position_bias = self.mlp_bias(index)
 
 
 #### 安装教程
