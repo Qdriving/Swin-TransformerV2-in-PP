@@ -4,7 +4,7 @@
 
 本文基于飞桨PaddleClas修改Swin Transformer按照Swin Transformer V2的内容进行修改，修改文件结构目录如下：
 - ---ppcls
--    ---arch
+     - ---arch
 -       ---backbone
 -          ---model_zoo
 -             ---Swin_Transformer.py         ###### 修改的代码部分
