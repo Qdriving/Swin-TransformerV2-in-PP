@@ -40,25 +40,10 @@
 3.  基于96x96的训练结果，预训练192x192图片size，训练10 epochs后验证集精度在72%左右；
 4.  基于192x192训练结果，预训练384x384图片size，训练5 epochs后验证集精度在82%左右，loss在2.64左右；经过多次调整learning_rate最终验证精度在82.7%一直无法再提高。
 
-#### 使用说明
+#### 总结
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  前半段很顺利，当使用384x384训练达到精度80%左右后一直提高有限，多次调整方法从头开始训练但是都无法提高。
+2.  四卡环境训练一个epoch需要30小时左右，验证过程很慢很难做到全面的排查。
+3.  不知道压缩后的数据集影响有多大，未压缩的数据集要重新整理标签所以也没机会验证。
+4.  有个小失误，最后阶段PatchEmbed冻结没有放开，本来以为放开了；目前在验证这种情况对精度有多少影响。
 
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
